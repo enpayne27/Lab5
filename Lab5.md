@@ -14,6 +14,7 @@ following to refresh the serial monitor with every new build of my code:
     
 The following is the final code I used for the LED delay for each character send:
 
+```
 int main(void)
 {
 	HAL_Init();
@@ -54,3 +55,4 @@ int main(void)
 		}
 	}
 }
+```
