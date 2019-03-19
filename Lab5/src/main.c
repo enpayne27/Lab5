@@ -22,15 +22,34 @@ int main(void)
 	/* Configure UART4 */
 	Configure_USART();
 
+	/* Configure the User LED */
+	BSP_LED_Init(LED2);
+	BSP_LED_Off(LED2);
+
+	uint32_t PrevTicks = HAL_GetTick();
+	uint32_t CurrentTicks = HAL_GetTick();
+
 	char* startText= "\n{\"Action\":\"Debug\",\"Info\":\"Testing UART4\"}\n";
 	SendCharArrayUSART4(startText,strlen(startText));
+	int strcnt = 0;
+	int timelapse = 0;
 	/* Infinite loop */
 	while(1){
+		CurrentTicks = HAL_GetTick();
 		if (haveString){
-				SendCharArrayUSART4(receivedString,strlen(receivedString));
+				strcnt = strlen(receivedString);
+				timelapse = strcnt*500;
+				BSP_LED_On(LED2);
+				PrevTicks = HAL_GetTick();
+				SendCharArrayUSART4(receivedString,strcnt);
 				SendCharArrayUSART4("\n",strlen("\n"));
 				haveString = 0;
-				}
+		}
+		else{
+			if((CurrentTicks-PrevTicks) >= timelapse){
+				BSP_LED_Off(LED2);
+				strcnt = 0;
+			}
 		}
 	}
 }
